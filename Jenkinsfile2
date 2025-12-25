@@ -6,6 +6,10 @@ pipeline {
         echo "Checkout Done"
       }
     }
+    stage("Building the application"){
+      steps {
+        echo "==========================Building Java Application========================="
+      }
+    }
   }
-
 }
