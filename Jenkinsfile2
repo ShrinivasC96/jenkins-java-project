@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-        IMAGE_NAME = 'priya123456/restapi'
+        IMAGE_NAME = 'shrinivas2616/restapi'
         CONTAINER_NAME = 'restapi-container'
         PORT_MAPPING = '8081:7000'  // hostPort:containerPort
     }
