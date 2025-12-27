@@ -5,7 +5,7 @@ pipeline {
         IMAGE_NAME = 'shrinivas2616/restapi'
         CONTAINER_NAME = 'restapi-container'
         PORT_MAPPING = '8081:7000'  // hostPort:containerPort
-        MINIKUBE_IP = '' // EC2 instance public IP address
+        MINIKUBE_IP = '13.233.119.219' // EC2 instance public IP address
     }
 
   stages{
