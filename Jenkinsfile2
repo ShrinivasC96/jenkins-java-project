@@ -5,7 +5,7 @@ pipeline {
         IMAGE_NAME = 'shrinivas2616/restapi'
         CONTAINER_NAME = 'restapi-container'
         PORT_MAPPING = '8081:7000'  // hostPort:containerPort
-        MINIKUBE_IP = '13.233.119.219' // EC2 instance public IP address
+        MINIKUBE_IP = '13.232.146.125' // EC2 instance public IP address
     }
 
   stages{
@@ -56,12 +56,16 @@ pipeline {
               }
         }
      }
-    stage('Deploying on EC2 Minikube Cluster') {
+    stage('Connect to EC2 & Deployon on Minikube ') {
             steps {
-                    sh 'scp deployment.yaml ubuntu@$MINIKUBE_IP:/home/ubuntu/'
-                    sh 'ssh ubuntu@$MINIKUBE_IP "kubectl delete -f /home/ubuntu/deployment.yaml --ignore-not-found=true"'
-                    sh 'ssh ubuntu@$MINIKUBE_IP "kubectl apply -f /home/ubuntu/deployment.yaml"'
-                }
-            }
+                     
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY')]) {
+                    sh "ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ubuntu@$MINIKUBE_IP 'echo Connected to EC2'"
+                    sh 'scp -i ${SSH_KEY} -o StrictHostKeyChecking=no deployment.yaml ubuntu@$MINIKUBE_IP:/home/ubuntu/'
+                    sh 'ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ubuntu@$MINIKUBE_IP "kubectl delete -f /home/ubuntu/deployment.yaml --ignore-not-found=true"'
+                    sh 'ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ubuntu@$MINIKUBE_IP "kubectl apply -f /home/ubuntu/deployment.yaml"'
+                  }
+          }
+     }
   }
 }
